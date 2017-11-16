@@ -20,6 +20,6 @@ import {
 const App = StackNavigator({
   Login: { screen: LoginScreen },
   Home: { screen: HomeScreen },
-})
+});
 
 export default App

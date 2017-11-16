@@ -9,16 +9,6 @@
     tools:context="ro.dutylabs.rusucosmin.anative.MainActivity">
 
     <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="password"
-        android:inputType="textPassword"
-        android:layout_below="@+id/usernameEditText"
-        android:layout_alignParentStart="true" />
-
-    <EditText
         android:id="@+id/usernameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,6 +18,16 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="password"
+        android:inputType="textPassword"
+        android:layout_below="@+id/usernameEditText"
+        android:layout_alignParentStart="true" />
+
     <Button
         android:id="@+id/sendMailButton"
         android:layout_width="wrap_content"
@@ -35,4 +35,12 @@
         android:text="Send mail"
         android:layout_below="@+id/passwordEditText"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/openBuylistsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sendMailButton"
+        android:layout_centerHorizontal="true"
+        android:text="Buylists" />
 </RelativeLayout>

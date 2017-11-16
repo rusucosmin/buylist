@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     Button sendMailButton = (Button) findViewById(R.id.sendMailButton);
+    Button openBuylistsButton = (Button) findViewById(R.id.openBuylistsButton);
     final EditText usernameEditText = (EditText) findViewById(R.id.usernameEditText);
     final EditText passwordEditText = (EditText) findViewById(R.id.passwordEditText);
     sendMailButton.setOnClickListener(new View.OnClickListener() {
@@ -26,6 +27,14 @@ public class MainActivity extends AppCompatActivity {
         emailIntent.putExtra(Intent.EXTRA_TEXT, "My username is '" + usernameEditText.getText()
             + "'.\n My password is '" + passwordEditText.getText() + "'.");
         startActivity(Intent.createChooser(emailIntent, "Send Email"));
+      }
+    });
+    openBuylistsButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        // open new activity
+        Intent intent = new Intent(MainActivity.this, BuylistsActivity.class);
+        startActivity(intent);
       }
     });
 

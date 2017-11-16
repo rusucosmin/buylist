@@ -5,9 +5,9 @@ import { View, Button, TextInput, Text, StyleSheet, Alert }
 
 var SendIntentAndroid = require('react-native-send-intent')
 
-export class LoginScreen extends Component {
+export default class EditBuylist extends Component {
   static navigationOptions = ({navigation}) => ({
-      title: 'Login',
+      title: 'Edit buylist',
   })
   constructor(props) {
     super(props)
