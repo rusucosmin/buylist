@@ -10,12 +10,8 @@ import { Alert, Text, StyleSheet, Image, View, TextInput, Button, FlatList,
 import {
   StackNavigator,
 } from 'react-navigation';
-import {
-  HomeScreen
-} from './screen/HomeScreen'
-import {
-  LoginScreen
-} from './screen/LoginScreen'
+import HomeScreen from './screen/HomeScreen'
+import LoginScreen from './screen/LoginScreen'
 
 const App = StackNavigator({
   Login: { screen: LoginScreen },

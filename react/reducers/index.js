@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import * as loginReducer from './login'
+import * as loginAttempts from './buylists'
 
 export default combineReducers(Object.assign(
-  loginReducer,
-))
+  loginAttempts,
+));

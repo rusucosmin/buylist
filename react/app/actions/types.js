@@ -1,1 +1,0 @@
-export const LOGIN_ATTEMPT = "LOGIN_ATTEMPT"

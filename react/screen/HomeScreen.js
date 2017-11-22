@@ -1,12 +1,28 @@
 import React, { Component } from 'react';
 
-import { View, Button, FlatList, Text, StyleSheet }
+import { View, Button, FlatList, Text, StyleSheet, TextInput }
   from 'react-native'
+
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { ActionCreators } from '../actions'
 
 export class HomeScreen extends Component {
   static navigationOptions = ({navigation}) => ({
     title: 'Your shared buylist',
   })
+  constructor(props) {
+    super(props)
+    this.state = {itemToAdd: ''}
+  }
+  addBuylist(item) {
+    this.props.addBuylist(item)
+  }
+  objWithKey(el) {
+    return {
+      'key': el,
+    }
+  }
   render() {
     const { navigate, goBack } = this.props.navigation
     const username = this.props.navigation.state.username
@@ -14,29 +30,39 @@ export class HomeScreen extends Component {
     return (
       <View style={styles.container}>
         <FlatList
-            data={[
-              {key: 'Toilet Paper'},
-              {key: 'Lightbulp'},
-              {key: 'Milk'},
-              {key: 'Eggs'},
-              {key: 'Bread'},
-              {key: 'Plain water'},
-              {key: 'Mineral water'},
-              {key: 'Chicken breast'},
-              {key: 'Butter'},
-              {key: 'Ustensils'},
-              {key: 'Salt'},
-              {key: 'Pepper'},
-              {key: 'Paper Towel'},
-            ]}
+            data={this.props.buylists.map(el => this.objWithKey(el))}
             renderItem={({item}) => <Text style={styles.item}>{item.key}</Text>}/>
         <Button title='Send back to Login'
             style={styles.row}
             onPress={() => goBack()} />
+        <View style={styles.row}>
+          <Text style={styles.textlabel}>
+            Add buylist
+          </Text>
+          <TextInput
+            style={styles.textinput} placeholder="item"
+            onChangeText={(itemToAdd) => {
+              this.setState({itemToAdd})
+            }}/>
+        </View>
+        <Button style={styles.row}
+          title="Add"
+          onPress={() => this.addBuylist(this.state.itemToAdd)}/>
       </View>
+
     )
   }
 }
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(ActionCreators, dispatch)
+}
+
+export default connect((state) => {
+  return {
+    buylists: state.buylists,
+  }
+}, mapDispatchToProps)(HomeScreen)
 
 const styles = StyleSheet.create({
   container: {

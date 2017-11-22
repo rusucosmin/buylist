@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { View, Button, TextInput, Text, StyleSheet, Alert }
   from 'react-native'
 
+import { connect } from 'react-redux'
+
 var SendIntentAndroid = require('react-native-send-intent')
 
 export default class EditBuylist extends Component {

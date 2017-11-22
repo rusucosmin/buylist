@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 
-import { View, Button, TextInput, Text, StyleSheet, Alert }
+import { View, Button, TextInput, Text, StyleSheet, Alert, TouchableHighlight }
   from 'react-native'
+
+import { connect } from 'react-redux'
+import { ActionCreators } from '../actions'
+
+import { bindActionCreators } from 'redux'
 
 var SendIntentAndroid = require('react-native-send-intent')
 
@@ -11,8 +16,17 @@ export class LoginScreen extends Component {
   })
   constructor(props) {
     super(props)
-    this.state = {username: '', password: ''}
+    this.state = {username: '', password: '', tried: 0}
   }
+
+  login() {
+    this.props.login();
+  }
+
+  incrementTriedCount() {
+    this.setState({tried: this.state.tried + 1})
+  }
+
   render() {
     const { navigate } = this.props.navigation
     const username = this.state.username
@@ -37,7 +51,7 @@ export class LoginScreen extends Component {
         </View>
         <Button style={styles.row}
           title = "Login"
-          onPress={() => navigate('Home', {username, password})}/>
+          onPress={() => { this.login(); navigate('Home', {username, password}) }}/>
         <Button style={styles.row}
           title = "Send email"
           onPress={() => SendIntentAndroid.sendMail("cr.rusucosmin@gmail.com",
@@ -47,6 +61,16 @@ export class LoginScreen extends Component {
     )
   }
 }
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(ActionCreators, dispatch)
+}
+
+export default connect((state) => {
+  return {
+    loginAttempts: state.loginAttempts,
+  }
+}, mapDispatchToProps)(LoginScreen)
 
 const styles = StyleSheet.create({
   container: {
