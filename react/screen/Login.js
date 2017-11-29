@@ -5,12 +5,11 @@ import { View, Button, TextInput, Text, StyleSheet, Alert, TouchableHighlight }
 
 import { connect } from 'react-redux'
 import { ActionCreators } from '../actions'
-
 import { bindActionCreators } from 'redux'
 
 var SendIntentAndroid = require('react-native-send-intent')
 
-export class LoginScreen extends Component {
+class LoginScreen extends Component {
   static navigationOptions = ({navigation}) => ({
       title: 'Login',
   })
@@ -28,6 +27,7 @@ export class LoginScreen extends Component {
   }
 
   render() {
+    const { dispatch, nav } = this.props
     const { navigate } = this.props.navigation
     const username = this.state.username
     const password = this.state.password
@@ -51,12 +51,11 @@ export class LoginScreen extends Component {
         </View>
         <Button style={styles.row}
           title = "Login"
-          onPress={() => { this.login(); navigate('Home', {username, password}) }}/>
+          onPress={() => { this.login(); navigate('Buylists', {username, password}) }}/>
         <Button style={styles.row}
           title = "Send email"
           onPress={() => SendIntentAndroid.sendMail("cr.rusucosmin@gmail.com",
             "Credentials", "username: " + username + ", password: " + password)}/>
-
       </View>
     )
   }

@@ -1,53 +1,50 @@
 import React, { Component } from 'react';
 
-import { View, Button, FlatList, Text, StyleSheet, TextInput }
+import { View, TouchableOpacity, Button, FlatList, Text, StyleSheet, TextInput }
   from 'react-native'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { ActionCreators } from '../actions'
 
-export class HomeScreen extends Component {
+class BuylistsScreen extends Component {
   static navigationOptions = ({navigation}) => ({
-    title: 'Your shared buylist',
+    title: 'Your buylists',
   })
   constructor(props) {
     super(props)
-    this.state = {itemToAdd: ''}
   }
   addBuylist(item) {
     this.props.addBuylist(item)
   }
-  objWithKey(el) {
+  getViewForModel(el) {
     return {
-      'key': el,
+      'key': el.id,
+      'name': el.name,
+      'description': el.description,
     }
   }
   render() {
     const { navigate, goBack } = this.props.navigation
-    const username = this.props.navigation.state.username
-    const password = this.props.navigation.state.password
     return (
       <View style={styles.container}>
         <FlatList
-            data={this.props.buylists.map(el => this.objWithKey(el))}
-            renderItem={({item}) => <Text style={styles.item}>{item.key}</Text>}/>
-        <Button title='Send back to Login'
-            style={styles.row}
-            onPress={() => goBack()} />
-        <View style={styles.row}>
-          <Text style={styles.textlabel}>
-            Add buylist
-          </Text>
-          <TextInput
-            style={styles.textinput} placeholder="item"
-            onChangeText={(itemToAdd) => {
-              this.setState({itemToAdd})
-            }}/>
-        </View>
+            data={this.props.buylists.map(el => this.getViewForModel(el))}
+            renderItem={({item}) =>
+              <TouchableOpacity onPress={() => {
+                console.log("clicked on item:")
+                console.log(item)
+                navigate('EditBuylist', {selected_item: item})
+              }}>
+                <View style={styles.item}>
+                  <Text style={styles.item_name}>{item.name}</Text>
+                  <Text style={styles.item_description}>{item.description}</Text>
+                </View>
+              </TouchableOpacity>
+            } />
         <Button style={styles.row}
-          title="Add"
-          onPress={() => this.addBuylist(this.state.itemToAdd)}/>
+          title="Create a new buylist"
+          onPress={() => navigate('CreateBuylist')}/>
       </View>
 
     )
@@ -62,13 +59,12 @@ export default connect((state) => {
   return {
     buylists: state.buylists,
   }
-}, mapDispatchToProps)(HomeScreen)
+}, mapDispatchToProps)(BuylistsScreen)
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
   },
   row: {
     flexDirection: 'row',
@@ -92,8 +88,12 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   item: {
-    fontSize: 20,
-    textAlign: 'center',
     margin: 10,
+  },
+  item_name: {
+    fontSize: 20,
+  },
+  item_description: {
+    fontSize: 10,
   },
 })

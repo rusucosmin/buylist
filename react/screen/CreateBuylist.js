@@ -6,58 +6,32 @@ import { View, Button, TextInput, Text, StyleSheet, Alert }
 import { connect } from 'react-redux'
 import { ActionCreators } from '../actions'
 import { bindActionCreators } from 'redux'
-import { NavigationActions } from 'react-navigation'
-
 
 var SendIntentAndroid = require('react-native-send-intent')
 
-class EditBuylistScreen extends Component {
+class CreateBuylistScreen extends Component {
   static navigationOptions = ({navigation}) => ({
-      title: 'Edit buylist',
+    title: 'Create buylist',
   })
   constructor(props) {
     super(props)
-    this.state = {
-      id: this.props.nav.routes[this.props.nav.index].params.selected_item.key,
-      name: this.props.nav.routes[this.props.nav.index].params.selected_item.name,
-      description:
-      this.props.nav.routes[this.props.nav.index].params.selected_item.description,
-    }
+    this.state = {id: 0, name: '', description: ''}
   }
-  updateBuylist() {
-    this.props.updateBuylist(
-        this.state.id,
-        this.state.name,
-        this.state.description
-    )
-    const navigateAction = NavigationActions.navigate({
-      routeName: 'Buylists',
-      params: {},
-    })
-    this.props.navigation.dispatch(navigateAction)
-  }
-  deleteBuylist() {
-    this.props.deleteBuylist(
-      this.state.id
-    )
-    const navigateAction = NavigationActions.navigate({
-      routeName: 'Buylists',
-      params: {},
-    })
-    this.props.navigation.dispatch(navigateAction)
+  addBuylist() {
+    this.props.addBuylist(this.state.id, this.state.name, this.state.description)
+    this.props.navigation.navigate('Buylists')
   }
   render() {
     const { navigate } = this.props.navigation
     return (
       <View style={styles.container}>
-        <Text style={styles.h1}>Edit Buylist</Text>
+        <Text style={styles.h1}>Create Buylist</Text>
         <View style={styles.row}>
           <Text style={styles.textlabel}>
             ID
           </Text>
           <TextInput
-            style={styles.textinput}
-            value={this.state.id.toString()}
+            style={styles.textinput} placeholder="0"
             onChangeText={(id) => this.setState({id})} />
         </View>
         <View style={styles.row}>
@@ -65,22 +39,18 @@ class EditBuylistScreen extends Component {
             Name
           </Text>
           <TextInput
-            style={styles.textinput}
-            value={this.state.name}
+            style={styles.textinput} placeholder="My buylist"
             onChangeText={(name) => this.setState({name})} />
         </View>
         <View style={styles.row}>
           <Text style={styles.textlabel}>Description</Text>
           <TextInput style={styles.textinput}
-            value={this.state.description}
+            placeholder="A simple buylist"
             onChangeText={(description) => this.setState({description})} />
         </View>
         <Button style={styles.row}
-          title = "Update"
-          onPress={() => this.updateBuylist()}/>
-        <Button style={styles.row}
-          title = "Delete"
-          onPress={() => this.deleteBuylist()}/>
+          title = "Create"
+          onPress={() => this.addBuylist()}/>
       </View>
     )
   }
@@ -92,9 +62,8 @@ function mapDispatchToProps(dispatch) {
 
 export default connect((state) => {
   return {
-    nav: state.nav,
   }
-}, mapDispatchToProps)(EditBuylistScreen)
+}, mapDispatchToProps)(CreateBuylistScreen)
 
 
 const styles = StyleSheet.create({
