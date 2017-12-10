@@ -22,6 +22,7 @@ class BuylistsScreen extends Component {
       'key': el.id,
       'name': el.name,
       'description': el.description,
+      'date': el.date,
     }
   }
   render() {

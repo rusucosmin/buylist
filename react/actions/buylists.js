@@ -1,20 +1,22 @@
 import * as types from './types'
 
-export function addBuylist(id, name, description) {
+export function addBuylist(id, name, description, date) {
   return {
     type: types.ADD_BUYLIST,
     id,
     name,
     description,
+    date,
   }
 }
 
-export function updateBuylist(id, name, description) {
+export function updateBuylist(id, name, description, date) {
   return {
     type: types.UPDATE_BUYLIST,
     id,
     name,
     description,
+    date,
   }
 }
 

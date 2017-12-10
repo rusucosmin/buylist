@@ -1,5 +1,6 @@
 import createReducer from '../lib/createReducer'
 import * as types from '../actions/types'
+import { AsyncStorage } from 'react-native'
 import Buylist from '../models/buylist'
 
 export const user = createReducer({}, {
@@ -18,17 +19,18 @@ export const buylists = createReducer([
       "Buylist for my girlfriend so that I can make her the best presents")
   ], {
   [types.ADD_BUYLIST](state, action) {
-    return [
+    newBuylist = [
       ...state,
-      new Buylist(action.id, action.name, action.description)
+      new Buylist(action.id, action.name, action.description, action.date)
     ]
+    return newBuylist
   },
   [types.DELETE_BUYLIST](state, action) {
     return state.filter(b => b.id != action.id)
   },
   [types.UPDATE_BUYLIST](state, action) {
     return state.map(b => b.id == action.id ?
-        new Buylist(action.id, action.name, action.description) :
+        new Buylist(action.id, action.name, action.description, action.date) :
         b)
   }
 })

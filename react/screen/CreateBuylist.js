@@ -7,6 +7,8 @@ import { connect } from 'react-redux'
 import { ActionCreators } from '../actions'
 import { bindActionCreators } from 'redux'
 
+import DatePicker from 'react-native-datepicker'
+
 var SendIntentAndroid = require('react-native-send-intent')
 
 class CreateBuylistScreen extends Component {
@@ -15,10 +17,16 @@ class CreateBuylistScreen extends Component {
   })
   constructor(props) {
     super(props)
-    this.state = {id: 0, name: '', description: ''}
+    today = new Date()
+    this.state = {
+      id: 0,
+      name: '',
+      description: '',
+      date: ''
+    }
   }
   addBuylist() {
-    this.props.addBuylist(this.state.id, this.state.name, this.state.description)
+    this.props.addBuylist(this.state.id, this.state.name, this.state.description, this.state.date)
     this.props.navigation.navigate('Buylists')
   }
   render() {
@@ -48,9 +56,38 @@ class CreateBuylistScreen extends Component {
             placeholder="A simple buylist"
             onChangeText={(description) => this.setState({description})} />
         </View>
+        <View style={styles.row}>
+          <Text style={styles.textlabel}>Date</Text>
+          <DatePicker
+            style={{width: 200}}
+            date={this.state.date}
+            mode="date"
+            placeholder="select date"
+            format="YYYY-MM-DD"
+            minDate="2016-05-01"
+            maxDate="2020-06-01"
+            confirmBtnText="Confirm"
+            cancelBtnText="Cancel"
+            customStyles={{
+              dateIcon: {
+                position: 'absolute',
+                left: 0,
+                top: 4,
+                marginLeft: 0
+              },
+              dateInput: {
+                marginLeft: 36
+              }
+            }}
+            onDateChange={(date) => {
+              this.setState({date})
+              console.log(this.state)
+            }} />
+        </View>
         <Button style={styles.row}
           title = "Create"
           onPress={() => this.addBuylist()}/>
+
       </View>
     )
   }
