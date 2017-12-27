@@ -26,7 +26,8 @@ class CreateBuylistScreen extends Component {
     }
   }
   addBuylist() {
-    this.props.addBuylist(this.state.id, this.state.name, this.state.description, this.state.date)
+    this.props.addBuylist(this.props.user.jwt, this.props.user.id,
+        this.state.name, this.state.description)
     this.props.navigation.navigate('Buylists')
   }
   render() {
@@ -99,6 +100,7 @@ function mapDispatchToProps(dispatch) {
 
 export default connect((state) => {
   return {
+    user: state.user
   }
 }, mapDispatchToProps)(CreateBuylistScreen)
 

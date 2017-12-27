@@ -35,6 +35,7 @@ function configureStore(initialState, engine) {
 const engine = createEngine('my-save-key');
 engine = filter(engine, [
     'buylists',
+    'user',
 ], [
     'nav',
 ]);
@@ -43,7 +44,9 @@ const load = storage.createLoader(engine);
 
 console.log("loading data")
 load(store)
-    .then((newState) => console.log('Loaded state:', newState))
+    .then((newState) => {
+      console.log('Loaded state:', newState)
+    })
     .catch((err) => {
         console.log(err);
         console.log('Failed to load previous state')});

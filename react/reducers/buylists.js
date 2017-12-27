@@ -1,36 +1,26 @@
 import createReducer from '../lib/createReducer'
 import * as types from '../actions/types'
-import { AsyncStorage } from 'react-native'
 import Buylist from '../models/buylist'
 
-export const user = createReducer({}, {
-})
-
-export const loginAttempts = createReducer(0, {
-  [types.LOGIN](state, action) {
-    return state + 1;
-  }
-})
-
-export const buylists = createReducer([
-  new Buylist(1, "Personal items", "Just my personal itesm"),
-  new Buylist(2, "1009", "Room 1009 buylist"),
-  new Buylist(3, "Girlfriend",
-      "Buylist for my girlfriend so that I can make her the best presents")
-  ], {
-  [types.ADD_BUYLIST](state, action) {
+export const buylists = createReducer([], {
+  [types.ADD_BUYLIST_SUCCESS](state, action) {
     newBuylist = [
       ...state,
-      new Buylist(action.id, action.name, action.description, action.date)
+      new Buylist(action.buylist.id,action.buylist.name,
+          action.buylist.description, action.buylist.date)
     ]
     return newBuylist
   },
-  [types.DELETE_BUYLIST](state, action) {
+  [types.DELETE_BUYLIST_SUCCESS](state, action) {
     return state.filter(b => b.id != action.id)
   },
-  [types.UPDATE_BUYLIST](state, action) {
-    return state.map(b => b.id == action.id ?
-        new Buylist(action.id, action.name, action.description, action.date) :
-        b)
+  [types.UPDATE_BUYLIST_SUCCESS](state, action) {
+    return state.map(b => b.id == action.buy_list.id ?
+        new Buylist(action.buy_list.id, action.buy_list.name,
+            action.buy_list.description, action.buy_list.date)
+        : b)
+  },
+  [types.FETCH_BUYLISTS_SUCCESS](state, action) {
+    return [...(action.buylists)]
   }
 })

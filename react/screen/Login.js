@@ -1,7 +1,15 @@
 import React, { Component } from 'react';
 
-import { View, Button, TextInput, Text, StyleSheet, Alert, TouchableHighlight }
-  from 'react-native'
+import {
+  ActivityIndicator,
+  Alert,
+  Button,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  View,
+} from 'react-native'
 
 import { connect } from 'react-redux'
 import { ActionCreators } from '../actions'
@@ -15,11 +23,15 @@ class LoginScreen extends Component {
   })
   constructor(props) {
     super(props)
-    this.state = {username: '', password: '', tried: 0}
+    this.state = {
+      email: '',
+      password: '',
+      tried: 0,
+    }
   }
 
   login() {
-    this.props.login();
+    this.props.login(this.state.email, this.state.password);
   }
 
   incrementTriedCount() {
@@ -29,18 +41,31 @@ class LoginScreen extends Component {
   render() {
     const { dispatch, nav } = this.props
     const { navigate } = this.props.navigation
-    const username = this.state.username
+    const email = this.state.email
     const password = this.state.password
+    const token = this.props.user.token
     return (
       <View style={styles.container}>
+        {
+          this.props.user.login_attempt.error != ""
+          &&
+          <Text>{this.props.user.login_attempt.error}</Text>
+        }
         <Text style={styles.h1}>Login with Splitwise</Text>
+        {
+          this.props.user.login_attempt.in_progress
+          &&
+          <View style={styles.row}>
+            <ActivityIndicator size="large" color="#0000ff"/>
+          </View>
+        }
         <View style={styles.row}>
           <Text style={styles.textlabel}>
-            Username
+            Email
           </Text>
           <TextInput
-            style={styles.textinput} placeholder="username"
-            onChangeText={(username) => this.setState({username})} />
+            style={styles.textinput} placeholder="email"
+            onChangeText={(email) => this.setState({email})} />
         </View>
         <View style={styles.row}>
           <Text style={styles.textlabel}>Password</Text>
@@ -51,11 +76,7 @@ class LoginScreen extends Component {
         </View>
         <Button style={styles.row}
           title = "Login"
-          onPress={() => { this.login(); navigate('Buylists', {username, password}) }}/>
-        <Button style={styles.row}
-          title = "Send email"
-          onPress={() => SendIntentAndroid.sendMail("cr.rusucosmin@gmail.com",
-            "Credentials", "username: " + username + ", password: " + password)}/>
+          onPress={() => { this.login();}}/>
       </View>
     )
   }
@@ -67,7 +88,8 @@ function mapDispatchToProps(dispatch) {
 
 export default connect((state) => {
   return {
-    loginAttempts: state.loginAttempts,
+    user: state.user,
+    token: state.user.token
   }
 }, mapDispatchToProps)(LoginScreen)
 

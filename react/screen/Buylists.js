@@ -13,6 +13,7 @@ class BuylistsScreen extends Component {
   })
   constructor(props) {
     super(props)
+    //this.props.fetchBuylists(this.props.user.jwt)
   }
   addBuylist(item) {
     this.props.addBuylist(item)
@@ -59,6 +60,7 @@ function mapDispatchToProps(dispatch) {
 export default connect((state) => {
   return {
     buylists: state.buylists,
+    user: state.user,
   }
 }, mapDispatchToProps)(BuylistsScreen)
 

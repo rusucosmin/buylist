@@ -22,6 +22,9 @@ class EditBuylistScreen extends Component {
   })
   constructor(props) {
     super(props)
+    if(!this.props.nav.routes[this.props.nav.index].params) {
+      return
+    }
     this.state = {
       id: this.props.nav.routes[this.props.nav.index].params.selected_item.key,
       name: this.props.nav.routes[this.props.nav.index].params.selected_item.name,
@@ -37,10 +40,11 @@ class EditBuylistScreen extends Component {
   }
   updateBuylist() {
     this.props.updateBuylist(
+        this.props.user.token,
         this.state.id,
         this.state.name,
         this.state.description,
-        this.state.date,
+        //this.state.date,
     )
     const navigateAction = NavigationActions.navigate({
       routeName: 'Buylists',
@@ -64,6 +68,7 @@ class EditBuylistScreen extends Component {
   }
   deleteBuylistConfirmed() {
     this.props.deleteBuylist(
+      this.props.user.token,
       this.state.id
     )
     const navigateAction = NavigationActions.navigate({
@@ -147,6 +152,7 @@ function mapDispatchToProps(dispatch) {
 export default connect((state) => {
   return {
     nav: state.nav,
+    user: state.user,
   }
 }, mapDispatchToProps)(EditBuylistScreen)
 
