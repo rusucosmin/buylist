@@ -14,6 +14,7 @@ import {
 import { connect } from 'react-redux'
 import { ActionCreators } from '../actions'
 import { bindActionCreators } from 'redux'
+import { ConnectivityRenderer } from 'react-native-offline';
 
 var SendIntentAndroid = require('react-native-send-intent')
 
@@ -74,9 +75,17 @@ class LoginScreen extends Component {
             onChangeText={(password) => this.setState({password})}
             secureTextEntry={true}/>
         </View>
-        <Button style={styles.row}
-          title = "Login"
-          onPress={() => { this.login();}}/>
+        <ConnectivityRenderer>
+          {isConnected => (
+            isConnected || !isConnected ? (
+              <Button style={styles.row}
+                  title = "Login"
+                  onPress={() => { this.login();}}/>
+            ) : (
+              <Text>Login is disabled since you are offline.</Text>
+            )
+          )}
+        </ConnectivityRenderer>
       </View>
     )
   }

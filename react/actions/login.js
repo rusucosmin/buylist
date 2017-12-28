@@ -1,6 +1,7 @@
 import * as types from './types'
 import LoginApi from '../api/login'
 import { fetchBuylists } from './buylists'
+import { fetchUsers } from './users'
 
 export function login(email, password) {
   return function(dispatch) {
@@ -26,7 +27,13 @@ export function getUser(jwt) {
           type: "Navigation/NAVIGATE",
           routeName: "Buylists"
         })
+        console.log(data)
+        if(data.role != "user") {
+          dispatch(fetchUsers(jwt))
+        }
       }).catch(error => {
+        console.log("There was an error")
+        console.log(error)
         dispatch(getUserError(error))
       })
   }

@@ -5,23 +5,50 @@
  */
 
 import React, { Component } from 'react';
-import { Alert, Text, StyleSheet, Image, View, TextInput, Button, FlatList,
-  SectionList } from 'react-native';
 import {
-  StackNavigator,
+  Alert,
+  Button,
+  FlatList,
+  Image,
+  SectionList,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
+import {
   addNavigationHelpers,
+  StackNavigator,
+  TabNavigator,
 } from 'react-navigation';
-import BuylistsScreen from './screen/Buylists'
-import EditBuylistScreen from './screen/EditBuylist'
+
 import LoginScreen from './screen/Login'
+
+import BuylistsScreen from './screen/Buylists'
 import CreateBuylistScreen from './screen/CreateBuylist'
-import {connect} from 'react-redux'
+import EditBuylistScreen from './screen/EditBuylist'
+
+import UsersScreen from './screen/Users'
+import CreateUserScreen from './screen/CreateUser'
+import EditUserScreen from './screen/EditUser'
+
+import { connect } from 'react-redux'
 
 export const AppNavigator = StackNavigator({
   Login: { screen: LoginScreen },
-  Buylists: { screen: BuylistsScreen },
+  Buylists: {
+    screen: TabNavigator({
+      Buylists: { screen: BuylistsScreen },
+      CreateBuylist: { screen: CreateBuylistScreen },
+    }, {
+      order: ['Buylists', 'CreateBuylist'],
+      animationEnabled: true,
+    }),
+  },
   EditBuylist: { screen: EditBuylistScreen },
-  CreateBuylist: { screen: CreateBuylistScreen },
+  Users: { screen: UsersScreen },
+  CreateUser: { screen: CreateUserScreen },
+  EditUser: { screen: EditUserScreen },
 });
 
 class App extends Component {
@@ -37,6 +64,7 @@ class App extends Component {
 
 const mapStateToProps = (state) => ({
   nav: state.nav,
+  user: state.user,
 })
 
 const AppWithNavigationState = connect(mapStateToProps)(App)

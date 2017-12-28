@@ -7,23 +7,21 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { ActionCreators } from '../actions'
 
-class BuylistsScreen extends Component {
+class UsersScreen extends Component {
   static navigationOptions = ({navigation}) => ({
-    title: 'Your buylists',
+    title: 'Users',
   })
   constructor(props) {
     super(props)
-    //this.props.fetchBuylists(this.props.user.jwt)
   }
-  addBuylist(item) {
-    this.props.addBuylist(item)
+  addUser(item) {
+    this.props.addUser(item)
   }
   getViewForModel(el) {
     return {
       'key': el.id,
-      'name': el.name,
-      'description': el.description,
-      'date': el.date,
+      'email': el.email,
+      'role': el.role,
     }
   }
   render() {
@@ -31,29 +29,20 @@ class BuylistsScreen extends Component {
     return (
       <View style={styles.container}>
         <FlatList
-            data={this.props.buylists.map(el => this.getViewForModel(el))}
+            data={this.props.users.map(el => this.getViewForModel(el))}
             renderItem={({item}) =>
               <TouchableOpacity onPress={() => {
-                console.log("clicked on item:")
-                console.log(item)
-                navigate('EditBuylist', {selected_item: item})
+                navigate('EditUser', {selected_item: item})
               }}>
                 <View style={styles.item}>
-                  <Text style={styles.item_name}>{item.name}</Text>
-                  <Text style={styles.item_description}>{item.description}</Text>
+                  <Text style={styles.item_email}>{item.email}</Text>
+                  <Text style={styles.item_role}>{item.role}</Text>
                 </View>
               </TouchableOpacity>
             } />
         <Button style={styles.row}
-          title="Create a new buylist"
-          onPress={() => navigate('CreateBuylist')}/>
-        {
-          this.props.user.role !== "user"
-            &&
-          <Button style={styles.row}
-            title="Manage users"
-            onPress={() => navigate('Users')}/>
-        }
+          title="Add user"
+          onPress={() => navigate('CreateUser')}/>
       </View>
 
     )
@@ -66,10 +55,10 @@ function mapDispatchToProps(dispatch) {
 
 export default connect((state) => {
   return {
-    buylists: state.buylists,
+    users: state.users,
     user: state.user,
   }
-}, mapDispatchToProps)(BuylistsScreen)
+}, mapDispatchToProps)(UsersScreen)
 
 const styles = StyleSheet.create({
   container: {
@@ -100,10 +89,10 @@ const styles = StyleSheet.create({
   item: {
     margin: 10,
   },
-  item_name: {
+  item_email: {
     fontSize: 20,
   },
-  item_description: {
-    fontSize: 10,
+  item_role: {
+    fontSize: 15,
   },
 })

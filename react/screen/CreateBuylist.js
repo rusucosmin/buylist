@@ -26,7 +26,7 @@ class CreateBuylistScreen extends Component {
     }
   }
   addBuylist() {
-    this.props.addBuylist(this.props.user.jwt, this.props.user.id,
+    this.props.addBuylist(this.props.user.token, this.props.user.id,
         this.state.name, this.state.description)
     this.props.navigation.navigate('Buylists')
   }

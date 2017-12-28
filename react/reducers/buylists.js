@@ -11,8 +11,8 @@ export const buylists = createReducer([], {
     ]
     return newBuylist
   },
-  [types.DELETE_BUYLIST_SUCCESS](state, action) {
-    return state.filter(b => b.id != action.id)
+  [types.FETCH_BUYLISTS_SUCCESS](state, action) {
+    return [...(action.buylists)]
   },
   [types.UPDATE_BUYLIST_SUCCESS](state, action) {
     return state.map(b => b.id == action.buy_list.id ?
@@ -20,7 +20,7 @@ export const buylists = createReducer([], {
             action.buy_list.description, action.buy_list.date)
         : b)
   },
-  [types.FETCH_BUYLISTS_SUCCESS](state, action) {
-    return [...(action.buylists)]
-  }
+  [types.DELETE_BUYLIST_SUCCESS](state, action) {
+    return state.filter(b => b.id != action.id)
+  },
 })
