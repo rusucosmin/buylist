@@ -77,7 +77,7 @@ class LoginScreen extends Component {
         </View>
         <ConnectivityRenderer>
           {isConnected => (
-            isConnected || !isConnected ? (
+            isConnected ? (
               <Button style={styles.row}
                   title = "Login"
                   onPress={() => { this.login();}}/>
