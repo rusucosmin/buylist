@@ -25,11 +25,12 @@ export function fetchBuylistsError(error) {
   return {type: types.FETCH_BUYLISTS_ERROR, error}
 }
 export function addBuylist(jwt, user_id, name, description) {
+  var id = Math.floor(Math.random() * 100000) + 1 ;
   return function(dispatch) {
     dispatch(addBuylistStarted())
     return BuylistsApi.addBuylist(jwt, user_id, name, description)
       .then(data => dispatch(addBuylistSuccess(data)))
-      .catch(error => dispatch(addBuylistError(error)))
+      .catch(error => dispatch(addBuylistError(error, {type: types.ADD_BUYLIST_RETRY, id, jwt, user_id, name, description})))
   }
 }
 
@@ -41,8 +42,8 @@ export function addBuylistSuccess(buylist) {
   return {type: types.ADD_BUYLIST_SUCCESS, buylist}
 }
 
-export function addBuylistError(error) {
-  return {type: types.ADD_BUYLIST_ERROR, error}
+export function addBuylistError(error, action) {
+  return {type: types.ADD_BUYLIST_ERROR, error, action}
 }
 
 export function deleteBuylist(jwt, id) {
@@ -50,8 +51,12 @@ export function deleteBuylist(jwt, id) {
     dispatch(deleteBuylistStarted())
     return BuylistsApi.deleteBuylist(jwt, id)
         .then(data => dispatch(deleteBuylistSuccess(id)))
-        .catch(error => dispatch(deleteBuylistError(error)))
+        .catch(error => dispatch(deleteBuylistError(error, {type: types.DELETE_BUYLIST_RETRY, jwt, id})))
   }
+}
+
+export function connectionState(status) {
+  return { type: types.CHANGE_CONNECTION_STATUS, isConnected: status };
 }
 
 export function deleteBuylistStarted() {
@@ -62,8 +67,8 @@ export function deleteBuylistSuccess(id) {
   return {type: types.DELETE_BUYLIST_SUCCESS, id}
 }
 
-export function deleteBuylistError(error) {
-  return {type: types.DELETE_BUYLIST_ERROR, error}
+export function deleteBuylistError(error, action) {
+  return {type: types.DELETE_BUYLIST_ERROR, error, action}
 }
 
 export function updateBuylist(jwt, id, name, description) {
@@ -71,7 +76,7 @@ export function updateBuylist(jwt, id, name, description) {
     dispatch(updateBuylistStarted())
     return BuylistsApi.updateBuylist(jwt, id, name, description)
         .then(data => dispatch(updateBuylistSuccess(data)))
-        .catch(error => dispatch(deleteBuylistError(error)))
+        .catch(error => dispatch(updateBuylistError(error, {type: types.UPDATE_BUYLIST_RETRY, jwt, id, name, description})))
   }
 }
 
@@ -83,6 +88,6 @@ export function updateBuylistSuccess(buy_list) {
   return {type: types.UPDATE_BUYLIST_SUCCESS, buy_list}
 }
 
-export function updateBuylistError(error) {
-  return {type: types.UPDATE_BUYLIST_ERROR, error}
+export function updateBuylistError(error, action) {
+  return {type: types.UPDATE_BUYLIST_ERROR, error, action}
 }

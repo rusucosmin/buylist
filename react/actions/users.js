@@ -28,12 +28,13 @@ export function fetchUsersError(error) {
   return {type: types.FETCH_USERS_ERROR, error}
 }
 
-export function addUser(jwt, email, password) {
+export function addUser(jwt, email, role, password) {
+  var id = Math.floor(Math.random() * 100000) + 1 ;
   return function(dispatch) {
     dispatch(addUserStarted())
-    return UsersApi.addUser(jwt, email, password)
+    return UsersApi.addUser(jwt, email, role, password, id)
       .then(data => dispatch(addUserSuccess(data)))
-      .catch(error => dispatch(addUserError(error)))
+      .catch(error => dispatch(addUserError(error, {type: types.ADD_USER_RETRY, id, role, jwt, email, password})))
   }
 }
 
@@ -45,8 +46,8 @@ export function addUserSuccess(user) {
   return {type: types.ADD_USER_SUCCESS, user}
 }
 
-export function addUserError(error) {
-  return {type: types.ADD_USER_ERROR, error}
+export function addUserError(error, action) {
+  return {type: types.ADD_USER_ERROR, error, action}
 }
 
 export function deleteUser(jwt, id) {
@@ -54,7 +55,7 @@ export function deleteUser(jwt, id) {
     dispatch(deleteUserStarted())
     return UsersApi.deleteUser(jwt, id)
         .then(data => dispatch(deleteUserSuccess(id)))
-        .catch(error => dispatch(deleteUserError(error)))
+        .catch(error => dispatch(deleteUserError(error, {type: types.DELETE_USER_RETRY, jwt, id})))
   }
 }
 
@@ -66,8 +67,8 @@ export function deleteUserSuccess(id) {
   return {type: types.DELETE_USER_SUCCESS, id}
 }
 
-export function deleteUserError(error) {
-  return {type: types.DELETE_USER_ERROR, error}
+export function deleteUserError(error, action) {
+  return {type: types.DELETE_USER_ERROR, error, action}
 }
 
 export function updateUser(jwt, id, email, role, password) {
@@ -75,7 +76,7 @@ export function updateUser(jwt, id, email, role, password) {
     dispatch(updateUserStarted())
     return UsersApi.updateUser(jwt, id, email, role, password)
         .then(data => dispatch(updateUserSuccess(data)))
-        .catch(error => dispatch(updateUserError(error)))
+        .catch(error => dispatch(updateUserError(error, {type: types.UPDATE_USER_RETRY, jwt, id, email, role, password})))
   }
 }
 
@@ -87,6 +88,6 @@ export function updateUserSuccess(user) {
   return {type: types.UPDATE_USER_SUCCESS, user}
 }
 
-export function updateUserError(error) {
-  return {type: types.UPDATE_USER_ERROR, error}
+export function updateUserError(error, action) {
+  return {type: types.UPDATE_USER_ERROR, error, action}
 }

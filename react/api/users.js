@@ -16,7 +16,7 @@ class UsersApi {
     })
   }
 
-  static addUser(jwt, email, password) {
+  static addUser(jwt, email, role, password, id) {
     return fetch("http://localhost:3000/user", {
       method: "POST",
       headers: {
@@ -27,7 +27,9 @@ class UsersApi {
       body: JSON.stringify({
         user: {
           email,
-          password
+          password,
+          role,
+          id
         }
       })
     }).then(res => {

@@ -1,4 +1,4 @@
-import { AppRegistry } from 'react-native';
+import { AppRegistry, NetInfo } from 'react-native';
 import App from './App';
 import React, { Component } from 'react';
 
@@ -36,6 +36,7 @@ const engine = createEngine('my-save-key');
 engine = filter(engine, [
     'buylists',
     'user',
+    'offline',
 ], [
     'nav',
 ]);

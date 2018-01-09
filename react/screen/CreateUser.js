@@ -22,6 +22,7 @@ class CreateUserScreen extends Component {
       email: '',
       password: '',
       confirm_password: '',
+      role: 'user',
     }
   }
   addUser() {
@@ -33,7 +34,7 @@ class CreateUserScreen extends Component {
       return
     }
     this.props.addUser(this.props.user.jwt,
-        this.state.email, this.state.password)
+        this.state.email, this.state.role, this.state.password)
     this.props.navigation.navigate('Users')
   }
   render() {
@@ -48,6 +49,12 @@ class CreateUserScreen extends Component {
           <TextInput
             style={styles.textinput} placeholder="user@example.com"
             onChangeText={(email) => this.setState({email})} />
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.textlabel}>Role</Text>
+          <TextInput style={styles.textinput}
+            value={this.state.role}
+            onChangeText={(role) => this.setState({role})} />
         </View>
         <View style={styles.row}>
           <Text style={styles.textlabel}>Password</Text>

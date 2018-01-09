@@ -15,7 +15,7 @@ class BuylistsApi {
     })
   }
 
-  static addBuylist(jwt, user_id, name, description) {
+  static addBuylist(jwt, user_id, name, description, id) {
     return fetch("http://localhost:3000/buy_lists", {
       method: "POST",
       headers: {
@@ -27,7 +27,8 @@ class BuylistsApi {
         buy_list: {
           user_id,
           name,
-          description
+          description,
+          id,
         }
       })
     }).then(res => {

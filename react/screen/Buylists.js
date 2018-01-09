@@ -7,16 +7,32 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { ActionCreators } from '../actions'
 
+import { ConnectivityRenderer } from 'react-native-offline';
+
 class BuylistsScreen extends Component {
   static navigationOptions = ({navigation}) => ({
     title: 'Your buylists',
   })
+  static id = ''
   constructor(props) {
     super(props)
-    //this.props.fetchBuylists(this.props.user.jwt)
+  }
+  refresh() {
+    if(this.props.offline && this.props.offline.length > 0)
+      this.props.retryAction(this.props.offline[0])
+    else {
+      this.fetchBuylists();
+    }
   }
   addBuylist(item) {
     this.props.addBuylist(item)
+  }
+  clearRetry() {
+    this.props.clearRetry()
+  }
+  fetchBuylists() {
+    this.props.fetchBuylists(this.props.user.token)
+    return true
   }
   getViewForModel(el) {
     return {
@@ -26,10 +42,39 @@ class BuylistsScreen extends Component {
       'date': el.date,
     }
   }
+  focusChanged(focus) {
+    console.log("Focus changed for buylists")
+    console.log(focus)
+    if(focus) {
+      if(BuylistsScreen.id == '') {
+        BuylistsScreen.id = setInterval(() => this.refresh(), 5000)
+        console.log("focus true starting interval " + BuylistsScreen.id)
+      }
+    } else {
+      if(BuylistsScreen.id != '') {
+        console.log("focus false clearing interval " + BuylistsScreen.id)
+        clearInterval(BuylistsScreen.id)
+        BuylistsScreen.id = ''
+      }
+    }
+  }
+  getCurrentRouteName() {
+    return this.props.nav.routes[this.props.nav.index].routeName
+  }
   render() {
+    this.focusChanged(this.getCurrentRouteName() == 'Buylists')
     const { navigate, goBack } = this.props.navigation
     return (
       <View style={styles.container}>
+        <ConnectivityRenderer>
+          {isConnected => (
+            isConnected ? (
+              <Text>Online</Text>
+            ) : (
+              <Text>Offline mode</Text>
+            )
+          )}
+        </ConnectivityRenderer>
         <FlatList
             data={this.props.buylists.map(el => this.getViewForModel(el))}
             renderItem={({item}) =>
@@ -47,12 +92,19 @@ class BuylistsScreen extends Component {
         <Button style={styles.row}
           title="Create a new buylist"
           onPress={() => navigate('CreateBuylist')}/>
+        <Button style={styles.row}
+            title="Refresh buylist"
+            onPress={() => this.fetchBuylists()}/>
+        <Button style={styles.row}
+            title="Clear"
+            onPress={() => this.clearRetry()}/>
         {
           this.props.user.role !== "user"
             &&
           <Button style={styles.row}
             title="Manage users"
             onPress={() => navigate('Users')}/>
+
         }
       </View>
 
@@ -68,6 +120,8 @@ export default connect((state) => {
   return {
     buylists: state.buylists,
     user: state.user,
+    offline: state.offline,
+    nav: state.nav,
   }
 }, mapDispatchToProps)(BuylistsScreen)
 

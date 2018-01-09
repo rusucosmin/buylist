@@ -7,15 +7,29 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { ActionCreators } from '../actions'
 
+import { ConnectivityRenderer } from 'react-native-offline';
+
 class UsersScreen extends Component {
   static navigationOptions = ({navigation}) => ({
     title: 'Users',
   })
+  static id = ''
   constructor(props) {
     super(props)
+    //id = setInterval(() => this.fetchUsers(), 5000)
   }
   addUser(item) {
     this.props.addUser(item)
+  }
+  fetchUsers() {
+    this.props.fetchUsers()
+  }
+  refresh() {
+    if(this.props.offline && this.props.offline.length > 0)
+      this.props.retryAction(this.props.offline[0])
+    else {
+      this.fetchUsers();
+    }
   }
   getViewForModel(el) {
     return {
@@ -24,10 +38,45 @@ class UsersScreen extends Component {
       'role': el.role,
     }
   }
+  fetchUsers() {
+    this.props.fetchUsers(this.props.user.token)
+  }
+  clearRetry() {
+    this.props.clearRetry()
+  }
+  focusChanged(focus) {
+    console.log("Focus changed for user")
+    console.log(focus)
+    if(focus) {
+      if(UsersScreen.id == '') {
+        UsersScreen.id = setInterval(() => this.refresh(), 5000)
+        console.log("focus true starting interval " + UsersScreen.id)
+      }
+    } else {
+      if(UsersScreen.id != '') {
+        console.log("focus false clearing interval " + UsersScreen.id)
+        clearInterval(UsersScreen.id)
+        UsersScreen.id = ''
+      }
+    }
+  }
+  getCurrentRouteName() {
+    return this.props.nav.routes[this.props.nav.index].routeName
+  }
   render() {
+    this.focusChanged(this.getCurrentRouteName() == 'Users')
     const { navigate, goBack } = this.props.navigation
     return (
       <View style={styles.container}>
+        <ConnectivityRenderer>
+          {isConnected => (
+            isConnected ? (
+              <Text>Online</Text>
+            ) : (
+              <Text>Offline mode</Text>
+            )
+          )}
+        </ConnectivityRenderer>
         <FlatList
             data={this.props.users.map(el => this.getViewForModel(el))}
             renderItem={({item}) =>
@@ -43,6 +92,12 @@ class UsersScreen extends Component {
         <Button style={styles.row}
           title="Add user"
           onPress={() => navigate('CreateUser')}/>
+        <Button style={styles.row}
+          title="Refresh users"
+          onPress={() => this.fetchUsers()}/>
+        <Button style={styles.row}
+          title="Clear"
+          onPress={() => this.clearRetry()}/>
       </View>
 
     )
@@ -57,6 +112,8 @@ export default connect((state) => {
   return {
     users: state.users,
     user: state.user,
+    nav: state.nav,
+    offline: state.offline,
   }
 }, mapDispatchToProps)(UsersScreen)
 

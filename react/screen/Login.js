@@ -4,6 +4,7 @@ import {
   ActivityIndicator,
   Alert,
   Button,
+  NetInfo,
   StyleSheet,
   Text,
   TextInput,
@@ -22,12 +23,19 @@ class LoginScreen extends Component {
   static navigationOptions = ({navigation}) => ({
       title: 'Login',
   })
+
   constructor(props) {
     super(props)
     this.state = {
       email: '',
       password: '',
       tried: 0,
+    }
+  }
+
+  focusChanged(focus) {
+    if(focus) {
+    } else {
     }
   }
 
@@ -39,7 +47,12 @@ class LoginScreen extends Component {
     this.setState({tried: this.state.tried + 1})
   }
 
+  getCurrentRouteName() {
+    return this.props.nav.routes[this.props.nav.index].routeName
+  }
+
   render() {
+    this.focusChanged(this.getCurrentRouteName() == 'Login')
     const { dispatch, nav } = this.props
     const { navigate } = this.props.navigation
     const email = this.state.email
@@ -98,7 +111,9 @@ function mapDispatchToProps(dispatch) {
 export default connect((state) => {
   return {
     user: state.user,
-    token: state.user.token
+    token: state.user.token,
+    network: state.network,
+    nav: state.nav,
   }
 }, mapDispatchToProps)(LoginScreen)
 

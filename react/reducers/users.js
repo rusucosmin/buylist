@@ -7,6 +7,10 @@ export const users = createReducer([], {
     return [...state, new User(action.user.id,
       action.user.email, action.user.role)]
   },
+  [types.ADD_USER_ERROR](state, action) {
+    return [...state, new User(action.action.id,
+      action.action.email, action.action.role)]
+  },
   [types.FETCH_USERS_SUCCESS](state, action) {
     return [...(action.users)]
   },
@@ -15,7 +19,15 @@ export const users = createReducer([], {
         new User(action.user.id, action.user.email, action.user.role)
         : b)
   },
+  [types.UPDATE_USER_ERROR](state, action) {
+    return state.map(b => b.id == action.action.id ?
+        new User(action.action.id, action.action.email, action.action.role)
+        : b)
+  },
   [types.DELETE_USER_SUCCESS](state, action) {
     return state.filter(b => b.id != action.id)
+  },
+  [types.DELETE_USER_ERROR](state, action) {
+    return state.filter(b => b.id != action.action.id)
   },
 })
